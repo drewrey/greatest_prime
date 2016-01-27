@@ -1,4 +1,5 @@
 import config
+import os
 import tweepy
 
 auth = tweepy.OAuthHandler(
@@ -10,16 +11,19 @@ auth.set_access_token(
 
 api = tweepy.API(auth)
 
-number = open('M74207281.txt', 'r').read().splitlines()
+CUR_PATH = os.path.dirname(os.path.abspath(__file__))
+
+number = open(os.path.join(CUR_PATH, 'M74207281.txt'), 'r').read().splitlines()
 prime = ''.join(number)
 
 def post_next_tweet():
     """read the location according to index, post next numbers"""
-    with open('index', 'r') as f:
+    index_path = os.path.join(CUR_PATH, 'index')
+    with open(index_path, 'r') as f:
         loc = f.read().splitlines()
         loc = int(loc[0])
 
-    with open('index', 'w') as f:
+    with open(index_path, 'w') as f:
         try:
             if loc == 0:
                 text = prime[(loc-140):]
