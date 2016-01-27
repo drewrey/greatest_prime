@@ -26,8 +26,11 @@ def post_next_tweet():
             else:
                 text = prime[(loc-140):loc]
             api.update_status(str(text))
+            print('status updated')
             f.write(str(loc+140))
         except Exception as e:
             f.write(str(loc))
             print('ack, we failed because!', e)
 
+if __name__ == "__main__":
+    post_next_tweet()
