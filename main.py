@@ -19,22 +19,17 @@ prime = ''.join(number)
 def post_next_tweet():
     """read the location according to index, post next numbers"""
     index_path = os.path.join(CUR_PATH, 'index')
-    with open(index_path, 'r') as f:
-        loc = f.read().splitlines()
-        loc = int(loc[0])
 
-    with open(index_path, 'w') as f:
-        try:
-            if loc == 0:
-                text = prime[(loc-140):]
-            else:
-                text = prime[(loc-140):loc]
-            api.update_status(str(text))
-            print('status updated')
-            f.write(str(loc+140))
-        except Exception as e:
-            f.write(str(loc))
-            print('ack, we failed because!', e)
+    try:
+        previous_status = api.user_timeline(count=1)
+        chunk = previous_status[0]._json['text']
+        past, future = prime.split(chunk)
+        tweet = future[0:140]
+        api.update_status(tweet)
+        print('status updated')
+
+    except Exception as e:
+        print('ack, we failed because!', e)
 
 if __name__ == "__main__":
     post_next_tweet()
